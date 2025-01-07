@@ -15,6 +15,13 @@ import { Textarea } from "@/components/ui/textarea";
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
+  const [jobPosition, setJobPosition] = useState();
+  const [jobDesc, setJobDesc] = useState();
+  const [jobExperience, setJobExperience] = useState();
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log(jobExperience, jobDesc, jobPosition);
+  };
   return (
     <div>
       <div
@@ -35,27 +42,45 @@ function AddNewInterview() {
               years of experience
             </DialogDescription>
           </DialogHeader>
-          <form className="flex flex-col gap-y-4 mt-1">
+          <form className="flex flex-col gap-y-4 mt-1" onSubmit={onSubmit}>
             <div className="">
               <label>Job Role/Job Position</label>
-              <Input placeholder="Ex. Full Stack Developer" required />
+              <Input
+                placeholder="Ex. Full Stack Developer"
+                required
+                onChange={(event) => setJobPosition(event.target.value)}
+              />
             </div>
             <div className="">
               <label>Job Description/Tech Stack (In Short)</label>
-              <Textarea placeholder="Ex. Sprint Boot, MERN, Angular" required/>
+              <Textarea
+                placeholder="Ex. Sprint Boot, MERN, Angular"
+                required
+                onChange={(event) => setJobDesc(event.target.value)}
+              />
             </div>
             <div className="">
               <label>Years of experience</label>
-              <Input placeholder="5" type="number" max="40" required/>
+              <Input
+                placeholder="5"
+                type="number"
+                max="40"
+                required
+                onChange={(event) => setJobExperience(event.target.value)}
+              />
             </div>
             <DialogFooter>
               <div className="flex gap-5 justify-end">
-                <Button type="button" variant="ghost" onClick={() => setOpenDialog(false)}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setOpenDialog(false)}
+                >
                   Cancel
                 </Button>
                 <Button type="submit">Start Interview</Button>
               </div>
-            </DialogFooter>  
+            </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
