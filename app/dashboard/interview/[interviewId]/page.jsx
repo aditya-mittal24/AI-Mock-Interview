@@ -7,6 +7,7 @@ import { Lightbulb, WebcamIcon } from "lucide-react";
 import * as React from "react";
 import Webcam from "react-webcam";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from 'next/link'
 
 function Interview({ params }) {
   const { interviewId } = React.use(params);
@@ -98,7 +99,6 @@ function Interview({ params }) {
               onUserMedia={() => setWebcamEnabled(true)}
               onUserMediaError={() => setWebcamEnabled(false)}
               mirrored={true}
-              
             />
           ) : (
             <div className="flex flex-col">
@@ -111,7 +111,13 @@ function Interview({ params }) {
         </div>
       </div>
       <div className="flex justify-end items-end">
-        <Button disabled={!webcamEnabled}>Start Interview</Button>
+      <Link href={'/dashboard/interview/' + interviewId + '/start'}>
+        <Button 
+        // disabled={!webcamEnabled}
+        >
+        Start Interview
+        </Button>
+        </Link>
       </div>
     </div>
   );
