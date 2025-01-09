@@ -3,12 +3,15 @@ import * as React from "react";
 import { db } from "@/utils/db";
 import { MockInterview } from "@/utils/schema";
 import { eq } from "drizzle-orm";
-import { Skeleton } from "@/components/ui/skeleton";
+import QuestionsSection from "./_components/QuestionsSection";
+import { LoaderCircleIcon, LoaderIcon } from "lucide-react";
+import RecordAnswerSection from "./_components/RecordAnswerSection";
 
 function StartInterview({ params }) {
   const { interviewId } = React.use(params);
   const [interviewData, setInterviewData] = React.useState({});
   const [mockInterviewQuestions, setMockInterviewQuestions] = React.useState();
+  const [activeQuestionIndex, setActiveQuestionIndex] = React.useState(0);
 
   React.useEffect(() => {
     GetInterviewDetails();
@@ -27,15 +30,19 @@ function StartInterview({ params }) {
       });
   }
   return (
-    <div>
-      {/* {mockInterviewQuestions.rows.map((data, id) => {
-        <p key={id}>data.question</p>;
-      })} */}
-      {mockInterviewQuestions ? (
-        mockInterviewQuestions.map((ques,id)=> <p key={id}>{ques.question}</p>)
-              ) : (
-                <Skeleton className="h-4 w-[200px]" />
-              )}
+    <div className="">
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        {/* Questions */}
+        {
+          <QuestionsSection
+            mockInterviewQuestions={mockInterviewQuestions}
+            activeQuestionIndex={activeQuestionIndex}
+          />
+        }
+
+        {/* Video audio recording */}
+        <RecordAnswerSection />
+      </div>
     </div>
   );
 }
