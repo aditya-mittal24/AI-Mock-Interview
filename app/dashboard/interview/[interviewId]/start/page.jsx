@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import QuestionsSection from "./_components/QuestionsSection";
 import RecordAnswerSection from "./_components/RecordAnswerSection";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 function StartInterview({ params }) {
   const { interviewId } = React.use(params);
@@ -61,7 +62,11 @@ function StartInterview({ params }) {
         )}
         {activeQuestionIndex ==
           process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT - 1 && (
-          <Button>End Interview</Button>
+          <Link
+            href={"/dashboard/interview/" + interviewData?.mockId + "/feedback"}
+          >
+            <Button>End Interview</Button>
+          </Link>
         )}
       </div>
     </div>
