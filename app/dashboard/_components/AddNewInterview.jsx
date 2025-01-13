@@ -16,6 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,6 +35,7 @@ function AddNewInterview() {
   const [jobDesc, setJobDesc] = useState();
   const [jobExperience, setJobExperience] = useState();
   const [interviewRound, setInterviewRound] = useState();
+  const [duration, setDuration] = useState();
   const [loading, setLoading] = useState(false);
   const [jsonResponse, setJsonResponse] = useState([]);
   const { user } = useUser();
@@ -109,13 +111,11 @@ function AddNewInterview() {
             </DialogDescription>
           </DialogHeader>
           <form className="flex flex-col gap-y-5 mt-1" onSubmit={onSubmit}>
+            {/* Interview round */}
             <div className="">
               <label>Interview Round</label>
               <RadioGroup
-                onChange={(event) => {
-                  console.log(event.target.value)
-                  setInterviewRound(event.target.value);
-                }}
+                onChange={(event) => setInterviewRound(event.target.value)}
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem
@@ -198,6 +198,27 @@ function AddNewInterview() {
                 </div>
               </RadioGroup>
             </div>
+            {/* Duration of interview  */}
+            <div className="flex gap-4 items-center">
+              <label htmlFor="">Duration (minutes)</label>
+              <ToggleGroup variant="outline" type="single">
+                <ToggleGroupItem
+                  onClick={()=>setDuration(20)}
+                  className="px-6"
+                  value="20"
+                >
+                  20
+                </ToggleGroupItem>
+                <ToggleGroupItem onClick={()=>setDuration(30)} className="px-6" value="30">
+                  30
+                </ToggleGroupItem>
+                <ToggleGroupItem onClick={()=>setDuration(45)} className="px-6" value="45" disabled={interviewRound=="HR Round"}>
+                  45
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+
+            {/* Job position  */}
             <div className="">
               <label>Job Role/Job Position</label>
               <Input
@@ -206,6 +227,7 @@ function AddNewInterview() {
                 onChange={(event) => setJobPosition(event.target.value)}
               />
             </div>
+            {/* Job description  */}
             <div className="">
               <label>Job Description/Tech Stack (In Short)</label>
               <Textarea
@@ -214,6 +236,7 @@ function AddNewInterview() {
                 onChange={(event) => setJobDesc(event.target.value)}
               />
             </div>
+            {/* Years of experience */}
             <div className="">
               <label>Years of experience</label>
               <Input
@@ -224,6 +247,7 @@ function AddNewInterview() {
                 onChange={(event) => setJobExperience(event.target.value)}
               />
             </div>
+            {/* Start cancel buttons  */}
             <DialogFooter>
               <div className="flex gap-5 justify-end">
                 <Button
