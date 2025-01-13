@@ -16,18 +16,32 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { chatSession } from "@/utils/GeminiAIModel";
-import { Info, LoaderCircle } from "lucide-react";
+import { ChevronsUpDown, Info, LoaderCircle } from "lucide-react";
 import { db } from "@/utils/db";
 import { MockInterview } from "@/utils/schema";
 import { v4 as uuidv4 } from "uuid";
 import { useUser } from "@clerk/nextjs";
 import moment from "moment";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
@@ -36,10 +50,12 @@ function AddNewInterview() {
   const [jobExperience, setJobExperience] = useState();
   const [interviewRound, setInterviewRound] = useState();
   const [duration, setDuration] = useState();
+  const [company, setCompany] = useState()
   const [loading, setLoading] = useState(false);
   const [jsonResponse, setJsonResponse] = useState([]);
   const { user } = useUser();
   const router = useRouter();
+  const companies = []
 
   const onSubmit = async (e) => {
     setLoading(true);
@@ -56,6 +72,7 @@ function AddNewInterview() {
       ", Experience: " +
       jobExperience +
       " ```";
+
 
     const result = await chatSession.sendMessage(inputPrompt);
     const jsonResp = result.response
@@ -217,7 +234,58 @@ function AddNewInterview() {
                 </ToggleGroupItem>
               </ToggleGroup>
             </div>
-
+            {/* Company  */}
+            <div className="flex flex-col gap-y-2">
+              <label htmlFor="">Company</label>
+              <Popover>
+                <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !company && "text-muted-foreground"
+                      )}
+                    >
+                      {company
+                        ? companies.find(
+                            (company) => company.value === company
+                          )?.label
+                        : "Select company"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search company..." />
+                    <CommandList>
+                      <CommandEmpty>No company found.</CommandEmpty>
+                      <CommandGroup>
+                        {companies.map((company) => (
+                          <CommandItem
+                            value={company.label}
+                            key={company.value}
+                            onSelect={() => {
+    
+                            }}
+                          >
+                            {company.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                company.value === company
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
             {/* Job position  */}
             <div className="">
               <label>Job Role/Job Position</label>
