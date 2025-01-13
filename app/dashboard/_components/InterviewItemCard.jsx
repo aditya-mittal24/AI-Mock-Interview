@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function InterviewItemCard({ interview }) {
   const router = useRouter();
@@ -12,12 +13,17 @@ function InterviewItemCard({ interview }) {
   };
   return (
     <div className="border shadow-sm rounded-lg p-3">
-      <h2 className="font-bold text-primary">{interview?.jobPosition}</h2>
+      {interview.jobPosition !== undefined ? (
+        <h2 className="font-bold text-primary">{interview?.jobPosition}</h2>
+      ) : (
+        <Skeleton className="h-3 w-10" />
+      )}
+      {interview.jobExperience !== undefined ?
       <h2 className="text-sm text-gray-600">
         {interview?.jobExperience} Years of Experience
-      </h2>
-      <h2 className="text-xs text-gray-400">
-        Created At: {interview.createdAt}
+      </h2> : <Skeleton className="h-2 w-40 my-2" />}
+      <h2 className="text-xs text-gray-400 flex gap-2 items-center">
+        Created At: {interview.createdAt!==undefined ? interview.createdAt : <Skeleton className="h-2 w-20 my-2" />}
       </h2>
       <div className="flex justify-between mt-2 gap-5">
         <Button
