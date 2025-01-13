@@ -63,7 +63,7 @@ function StartInterview({ params }) {
         {activeQuestionIndex ==
           process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT - 1 && (
           <Link
-            href={"/dashboard/interview/" + interviewData?.mockId + "/feedback"}
+            href={"/interview/" + interviewData?.mockId + "/feedback"}
           >
             <Button>End Interview</Button>
           </Link>

@@ -111,7 +111,7 @@ function Interview({ params }) {
         </div>
       </div>
       <div className="flex justify-end items-end">
-      <Link href={'/dashboard/interview/' + interviewId + '/start'}>
+      <Link href={'/interview/' + interviewId + '/start'}>
         <Button 
         // disabled={!webcamEnabled}
         >
