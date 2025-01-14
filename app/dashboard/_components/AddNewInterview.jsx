@@ -131,7 +131,7 @@ function AddNewInterview() {
             <div className="">
               <label>Interview Round</label>
               <fieldset className="space-y-2 mt-2">
-              {/* Technical Round */}
+                {/* Technical Round */}
                 <div>
                   <label
                     htmlFor="TechnicalRound"
@@ -156,8 +156,10 @@ function AddNewInterview() {
                       value="Technical Round"
                       id="TechnicalRound"
                       className="sr-only"
-                      checked={interviewRound=="Technical Round"}
-                      onChange={(event)=>{setInterviewRound(event.target.value)}}
+                      checked={interviewRound == "Technical Round"}
+                      onChange={(event) => {
+                        setInterviewRound(event.target.value);
+                      }}
                     />
                   </label>
                 </div>
@@ -186,8 +188,10 @@ function AddNewInterview() {
                       value="Coding Round"
                       id="CodingRound"
                       className="sr-only"
-                      checked={interviewRound=="Coding Round"}
-                      onChange={(event)=>{setInterviewRound(event.target.value)}}
+                      checked={interviewRound == "Coding Round"}
+                      onChange={(event) => {
+                        setInterviewRound(event.target.value);
+                      }}
                     />
                   </label>
                 </div>
@@ -216,8 +220,10 @@ function AddNewInterview() {
                       value="Technical + Coding Round"
                       id="TechnicalCodingRound"
                       className="sr-only"
-                      checked={interviewRound=="Technical + Coding Round"}
-                      onChange={(event)=>{setInterviewRound(event.target.value)}}
+                      checked={interviewRound == "Technical + Coding Round"}
+                      onChange={(event) => {
+                        setInterviewRound(event.target.value);
+                      }}
                     />
                   </label>
                 </div>
@@ -246,8 +252,11 @@ function AddNewInterview() {
                       value="HR Round"
                       id="HRRound"
                       className="sr-only"
-                      checked={interviewRound=="HR Round"}
-                      onChange={(event)=>{setInterviewRound(event.target.value)}}
+                      checked={interviewRound == "HR Round"}
+                      onChange={(event) => {
+                        setInterviewRound(event.target.value);
+                        setDuration('20');
+                      }}
                     />
                   </label>
                 </div>
