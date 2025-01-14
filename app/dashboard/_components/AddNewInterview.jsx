@@ -157,7 +157,7 @@ function AddNewInterview() {
                       id="TechnicalRound"
                       className="sr-only"
                       checked={interviewRound=="Technical Round"}
-                      onClick={(event)=>{setInterviewRound(event.target.value)}}
+                      onChange={(event)=>{setInterviewRound(event.target.value)}}
                     />
                   </label>
                 </div>
@@ -186,6 +186,8 @@ function AddNewInterview() {
                       value="Coding Round"
                       id="CodingRound"
                       className="sr-only"
+                      checked={interviewRound=="Coding Round"}
+                      onChange={(event)=>{setInterviewRound(event.target.value)}}
                     />
                   </label>
                 </div>
@@ -214,6 +216,8 @@ function AddNewInterview() {
                       value="Technical + Coding Round"
                       id="TechnicalCodingRound"
                       className="sr-only"
+                      checked={interviewRound=="Technical + Coding Round"}
+                      onChange={(event)=>{setInterviewRound(event.target.value)}}
                     />
                   </label>
                 </div>
@@ -242,6 +246,8 @@ function AddNewInterview() {
                       value="HR Round"
                       id="HRRound"
                       className="sr-only"
+                      checked={interviewRound=="HR Round"}
+                      onChange={(event)=>{setInterviewRound(event.target.value)}}
                     />
                   </label>
                 </div>
