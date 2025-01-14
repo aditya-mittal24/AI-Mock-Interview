@@ -34,7 +34,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { chatSession } from "@/utils/GeminiAIModel";
-import { ChevronsUpDown, Info, LoaderCircle } from "lucide-react";
+import { ChevronsUpDown, Info, LoaderCircle, Paperclip } from "lucide-react";
 import { db } from "@/utils/db";
 import { MockInterview } from "@/utils/schema";
 import { v4 as uuidv4 } from "uuid";
@@ -51,11 +51,21 @@ function AddNewInterview() {
   const [interviewRound, setInterviewRound] = useState();
   const [duration, setDuration] = useState("20");
   const [company, setCompany] = useState();
+  const [resume, setResume] = useState();
   const [loading, setLoading] = useState(false);
   const [jsonResponse, setJsonResponse] = useState([]);
   const { user } = useUser();
   const router = useRouter();
   const companies = [];
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type !== "application/pdf") {
+      alert("Please upload only PDF files!");
+      e.target.value = null; // Clear the input
+    }
+    setResume(file.name);
+  };
 
   const onSubmit = async (e) => {
     setLoading(true);
@@ -433,6 +443,27 @@ function AddNewInterview() {
                 </PopoverContent>
               </Popover>
             </div>
+            {/* Resume */}
+            <div className="flex gap-4 items-center">
+            <label htmlFor="">Upload Resume</label>
+            <div className="flex justify-center items-center gap-2">
+      <label
+        htmlFor="pdf-upload"
+        className="flex items-center space-x-2 px-4 py-2 text-blue-500 text-sm font-medium rounded-lg shadow-md hover:bg-blue-500 hover:text-white transition duration-300 cursor-pointer"
+      >
+        <Paperclip className="w-5 h-5" />
+        <span>Upload</span>
+      </label>
+      <input
+        id="pdf-upload"
+        type="file"
+        accept="application/pdf"
+        onChange={handleFileUpload}
+        className="hidden"
+      />
+      <span>{resume}</span>
+    </div>
+            </div>
             {/* Job position  */}
             <div className="">
               <label>Job Role/Job Position</label>
@@ -506,3 +537,29 @@ export default AddNewInterview;
     Delete
   </button>
 </div>;
+
+// appdynamics
+// arista networks
+// arista
+// asana
+// blackrock
+//blizzard
+// bloomreach
+// booking.com - booking
+// clutter
+// codenation
+// cohesity
+// coursera
+// DE Shaw
+// DeliveryHero
+// Deutsche bank
+// DiDi
+// Docusign
+
+
+// to remove
+// bank of america
+// bolt
+// cognizant
+// coinbase
+// Deloitte
