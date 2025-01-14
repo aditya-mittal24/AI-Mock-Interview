@@ -20,7 +20,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 import {
   Command,
   CommandEmpty,
@@ -28,7 +28,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,13 +49,13 @@ function AddNewInterview() {
   const [jobDesc, setJobDesc] = useState();
   const [jobExperience, setJobExperience] = useState();
   const [interviewRound, setInterviewRound] = useState();
-  const [duration, setDuration] = useState();
-  const [company, setCompany] = useState()
+  const [duration, setDuration] = useState("20");
+  const [company, setCompany] = useState();
   const [loading, setLoading] = useState(false);
   const [jsonResponse, setJsonResponse] = useState([]);
   const { user } = useUser();
   const router = useRouter();
-  const companies = []
+  const companies = [];
 
   const onSubmit = async (e) => {
     setLoading(true);
@@ -72,7 +72,6 @@ function AddNewInterview() {
       ", Experience: " +
       jobExperience +
       " ```";
-
 
     const result = await chatSession.sendMessage(inputPrompt);
     const jsonResp = result.response
@@ -131,8 +130,124 @@ function AddNewInterview() {
             {/* Interview round */}
             <div className="">
               <label>Interview Round</label>
-              <RadioGroup
-                onChange={(event) => setInterviewRound(event.target.value)}
+              <fieldset className="space-y-2 mt-2">
+              {/* Technical Round */}
+                <div>
+                  <label
+                    htmlFor="TechnicalRound"
+                    className="flex cursor-pointer w-[50%] items-center justify-between gap-4 rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
+                  >
+                    <p className="text-gray-700">Technical Round</p>
+
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Info className="h-4 w-4" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Programming and DSA concepts. No coding.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+                    <input
+                      type="radio"
+                      name="TechnicalRound"
+                      value="Technical Round"
+                      id="TechnicalRound"
+                      className="sr-only"
+                      checked={interviewRound=="Technical Round"}
+                      onClick={(event)=>{setInterviewRound(event.target.value)}}
+                    />
+                  </label>
+                </div>
+                {/* Coding Round  */}
+                <div>
+                  <label
+                    htmlFor="CodingRound"
+                    className="flex w-[50%] cursor-pointer items-center justify-between gap-4 rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
+                  >
+                    <p className="text-gray-700">Coding Round</p>
+
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Info className="h-4 w-4" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>1-2 DSA questions. Coding + concepts.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+                    <input
+                      type="radio"
+                      name="CodingRound"
+                      value="Coding Round"
+                      id="CodingRound"
+                      className="sr-only"
+                    />
+                  </label>
+                </div>
+                {/* Technical + Coding Round  */}
+                <div>
+                  <label
+                    htmlFor="TechnicalCodingRound"
+                    className="flex w-[50%] cursor-pointer items-center justify-between gap-4 rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
+                  >
+                    <p className="text-gray-700">Technical + Coding Round</p>
+
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Info className="h-4 w-4" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Technical questions + coding topics</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+                    <input
+                      type="radio"
+                      name="TechnicalCodingRound"
+                      value="Technical + Coding Round"
+                      id="TechnicalCodingRound"
+                      className="sr-only"
+                    />
+                  </label>
+                </div>
+                {/* HR Round  */}
+                <div>
+                  <label
+                    htmlFor="HRRound"
+                    className="flex w-[50%] cursor-pointer items-center justify-between gap-4 rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
+                  >
+                    <p className="text-gray-700">HR Round</p>
+
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Info className="h-4 w-4" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>HR questions only. No technical questions.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+                    <input
+                      type="radio"
+                      name="HRRound"
+                      value="HR Round"
+                      id="HRRound"
+                      className="sr-only"
+                    />
+                  </label>
+                </div>
+              </fieldset>
+              {/* <RadioGroup
+                onValueChange={(event) => setInterviewRound(event.target.value)}
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem
@@ -213,47 +328,66 @@ function AddNewInterview() {
                     </TooltipProvider>
                   </label>
                 </div>
-              </RadioGroup>
+              </RadioGroup> */}
             </div>
             {/* Duration of interview  */}
             <div className="flex gap-4 items-center">
               <label htmlFor="">Duration (minutes)</label>
-              <ToggleGroup variant="outline" type="single">
-                <ToggleGroupItem
-                  onClick={()=>setDuration(20)}
-                  className="px-6"
-                  value="20"
+              <div className="inline-flex rounded-lg border border-gray-100 bg-gray-100 p-1">
+                <button
+                  className={
+                    duration === "20"
+                      ? "inline-block rounded-md bg-white px-6 py-2 text-sm text-blue-500 shadow-sm focus:relative"
+                      : "inline-block rounded-md px-6 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative"
+                  }
+                  onClick={() => setDuration("20")}
                 >
                   20
-                </ToggleGroupItem>
-                <ToggleGroupItem onClick={()=>setDuration(30)} className="px-6" value="30">
+                </button>
+
+                <button
+                  className={
+                    duration === "30"
+                      ? "inline-block rounded-md bg-white px-6 py-2 text-sm text-blue-500 shadow-sm focus:relative"
+                      : "inline-block rounded-md px-6 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative"
+                  }
+                  onClick={() => setDuration("30")}
+                >
                   30
-                </ToggleGroupItem>
-                <ToggleGroupItem onClick={()=>setDuration(45)} className="px-6" value="45" disabled={interviewRound=="HR Round"}>
+                </button>
+
+                <button
+                  className={
+                    duration === "45"
+                      ? "inline-block rounded-md bg-white px-6 py-2 text-sm text-blue-500 shadow-sm focus:relative"
+                      : "inline-block rounded-md px-6 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative"
+                  }
+                  onClick={() => setDuration("45")}
+                  disabled={interviewRound == "HR Round"}
+                >
                   45
-                </ToggleGroupItem>
-              </ToggleGroup>
+                </button>
+              </div>
             </div>
             {/* Company  */}
             <div className="flex flex-col gap-y-2">
               <label htmlFor="">Company</label>
               <Popover>
                 <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      className={cn(
-                        "w-[200px] justify-between",
-                        !company && "text-muted-foreground"
-                      )}
-                    >
-                      {company
-                        ? companies.find(
-                            (company) => company.value === company
-                          )?.label
-                        : "Select company"}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className={cn(
+                      "w-[200px] justify-between",
+                      !company && "text-muted-foreground"
+                    )}
+                  >
+                    {company
+                      ? companies.find((company) => company.value === company)
+                          ?.label
+                      : "Select company"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0">
                   <Command>
@@ -265,9 +399,7 @@ function AddNewInterview() {
                           <CommandItem
                             value={company.label}
                             key={company.value}
-                            onSelect={() => {
-    
-                            }}
+                            onSelect={() => {}}
                           >
                             {company.label}
                             <Check
@@ -345,3 +477,17 @@ function AddNewInterview() {
 }
 
 export default AddNewInterview;
+
+<div className="inline-flex rounded-lg border border-gray-100 bg-gray-100 p-1">
+  <button className="inline-block rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative">
+    Edit
+  </button>
+
+  <button className="inline-block rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative">
+    View
+  </button>
+
+  <button className="inline-block rounded-md bg-white px-4 py-2 text-sm text-blue-500 shadow-sm focus:relative">
+    Delete
+  </button>
+</div>;
