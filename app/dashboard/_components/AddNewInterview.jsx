@@ -42,6 +42,7 @@ import { useUser } from "@clerk/nextjs";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import axios from 'axios';
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
@@ -64,7 +65,24 @@ function AddNewInterview() {
       alert("Please upload only PDF files!");
       e.target.value = null; // Clear the input
     }
+    uploadResume(file);
     setResume(file.name);
+  };
+  const uploadResume = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+  
+    try {
+      const response = await axios.post('http://localhost:8000/upload-resume', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Parsed Data:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
   };
 
   const onSubmit = async (e) => {
