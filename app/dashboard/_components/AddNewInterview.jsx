@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/command";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { chatSession } from "@/utils/GeminiAIModel";
@@ -62,7 +63,7 @@ function AddNewInterview() {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file && file.type !== "application/pdf") {
-      alert("Please upload only PDF files!");
+      toast("Please upload PDF files only.");
       e.target.value = null; // Clear the input
       return;
     }
