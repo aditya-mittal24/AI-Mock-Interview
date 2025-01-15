@@ -64,6 +64,7 @@ function AddNewInterview() {
     if (file && file.type !== "application/pdf") {
       alert("Please upload only PDF files!");
       e.target.value = null; // Clear the input
+      return;
     }
     uploadResume(file);
     setResume(file.name);
