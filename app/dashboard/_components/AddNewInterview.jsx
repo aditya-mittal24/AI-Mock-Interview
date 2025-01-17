@@ -47,14 +47,13 @@ import axios from 'axios';
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
-  const [jobPosition, setJobPosition] = useState();
   const [jobDesc, setJobDesc] = useState();
-  const [jobExperience, setJobExperience] = useState();
   const [interviewRound, setInterviewRound] = useState();
   const [duration, setDuration] = useState("20");
-  const [company, setCompany] = useState();
+  const [company, setCompany] = useState("");
   const [resume, setResume] = useState();
   const [loading, setLoading] = useState(false);
+  const [resumeData, setResumeData] = useState();
   const [jsonResponse, setJsonResponse] = useState([]);
   const { user } = useUser();
   const router = useRouter();
@@ -67,10 +66,12 @@ function AddNewInterview() {
       e.target.value = null; // Clear the input
       return;
     }
+    setResumeData("")
     uploadResume(file);
     setResume(file.name);
   };
   const uploadResume = async (file) => {
+    setLoading(true)
     const formData = new FormData();
     formData.append('file', file);
   
@@ -80,11 +81,11 @@ function AddNewInterview() {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Parsed Data:', response.data);
-      return response.data;
+      setResumeData(JSON.stringify(response.data))
     } catch (error) {
       console.error('Error uploading file:', error);
     }
+    setLoading(false)
   };
 
   const onSubmit = async (e) => {
@@ -92,16 +93,64 @@ function AddNewInterview() {
     e.preventDefault();
     console.log();
 
-    const inputPrompt =
-      "A candidate's professional information(Job Position, Job Description, Experience) is delimited in triple backticks. Make " +
-      process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT +
-      " real life interview questions based on the details along with their answers. Send the response in JSON format. Give question and answer field in JSON. ```Job Position: " +
-      jobPosition +
-      ", Job Description/Tech Stack: " +
-      jobDesc +
-      ", Experience: " +
-      jobExperience +
-      " ```";
+    const inputPrompt = `
+    Act as a professional interviewer conducting an interview for the role described in the job description. Generate realistic and conversational questions for the candidate based on the given attributes. Follow this structured flow:
+
+    Introduction and Ice-Breaker:
+    Start with a warm introduction to make the candidate comfortable. For example:
+      "Hello [name], I am your interviewer today. How are you doing?"
+      "Can you introduce yourself or tell me about yourself briefly?"
+
+    Resume-Based Questions:
+    Ask questions directly tied to the candidate's resume content:
+      Education: "I see you studied at [university] with a degree in [degree]. Can you share how this prepared you for a role in [job's relevant field]?"
+      Experience: "You worked as a [designation] at [company_names]. Can you discuss one of the most impactful projects you worked on there?"
+      Projects: "You developed [project name]. Can you explain the challenges you faced while implementing [specific feature]?"
+      Skills: "You list [skill]. Can you provide an example of how you've applied this skill in a practical scenario?"
+
+    Job-Specific and Skill Questions:
+    Gradually transition to questions relevant to the job description:
+      For technical or coding rounds: "Based on the required skills for this role, how would you approach implementing [specific technology or concept]?"
+      For HR rounds: "What motivates you to apply for this role, and how do you see yourself contributing to our company culture?"
+
+    Progressive Difficulty:
+    Begin with direct and simple questions, then move to deeper and more detailed ones:
+      "Can you walk me through your approach to improving [specific outcome or metric] in your past role?"
+      "What strategies would you use to tackle [specific challenge] based on your prior experience?"
+
+    Closing and Candidate Input:
+    Conclude with open-ended questions to encourage candidate input:
+      "Do you have any questions for me about the role or the company?"
+      "That marks the end of the interview, best of luck, etc."
+
+  Return the questions in the following JSON format:
+  {
+  "introduction": ["Hello [name], I am your interviewer today. How are you doing?", "Can you introduce yourself?"],
+  "resume_based": ["You worked as a [designation] at [company_names]. Can you discuss one of the most impactful projects you worked on?", "I see you developed [project name]. Can you explain the challenges you faced while implementing [specific feature]?"],
+  "job_specific": ["Based on the job description, how would you approach implementing [specific technology or concept]?", "What strategies would you use to tackle [specific challenge] in this role?"],
+  "closing": ["Do you have any questions for me about the role or the company?", "That marks the end of the interview, best of luck, etc."]
+  }
+
+  NOTE: Assume each question takes around 2-3 minutes or so, give the number of questions according to the interview duration.
+
+  Use the following attributes to tailor the questions:
+  Interview Round: ${interviewRound}
+  Interview Duration: ${duration}
+  Candidate Resume: ${resumeData}
+  Job Description: ${jobDesc}
+  Make the interview engaging and as realistic as possible while staying professional.
+    `;
+
+    // const inputPrompt =
+    //   "A candidate's professional information(Job Position, Job Description, Experience) is delimited in triple backticks. Make " +
+    //   process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT +
+    //   " real life interview questions based on the details along with their answers. Send the response in JSON format. Give question and answer field in JSON. ```Job Position: " +
+    //   jobPosition +
+    //   ", Job Description/Tech Stack: " +
+    //   jobDesc +
+    //   ", Experience: " +
+    //   jobExperience +
+    //   " ```";
 
     const result = await chatSession.sendMessage(inputPrompt);
     const jsonResp = result.response
@@ -111,28 +160,26 @@ function AddNewInterview() {
     console.log(JSON.parse(jsonResp));
     setJsonResponse(jsonResp);
 
-    if (jsonResp) {
-      const resp = await db
-        .insert(MockInterview)
-        .values({
-          mockId: uuidv4(),
-          jsonMockResp: jsonResp,
-          jobPosition: jobPosition,
-          jobDesc: jobDesc,
-          jobExperience: jobExperience,
-          createdBy: user?.primaryEmailAddress?.emailAddress,
-          createdAt: moment().format("DD-MM-yyyy"),
-        })
-        .returning({ mockId: MockInterview.mockId });
+    // if (jsonResp) {
+    //   const resp = await db
+    //     .insert(MockInterview)
+    //     .values({
+    //       mockId: uuidv4(),
+    //       jsonMockResp: jsonResp,
+    //       jobDesc: jobDesc,
+    //       createdBy: user?.primaryEmailAddress?.emailAddress,
+    //       createdAt: moment().format("DD-MM-yyyy"),
+    //     })
+    //     .returning({ mockId: MockInterview.mockId });
 
-      console.log("Inserted ID:", resp);
-      if (resp) {
-        setOpenDialog(false);
-        router.push("/interview/" + resp[0]?.mockId);
-      }
-    } else {
-      console.log("Error");
-    }
+    //   console.log("Inserted ID:", resp);
+    //   if (resp) {
+    //     setOpenDialog(false);
+    //     router.push("/interview/" + resp[0]?.mockId);
+    //   }
+    // } else {
+    //   console.log("Error");
+    // }
 
     setLoading(false);
   };
@@ -484,15 +531,6 @@ function AddNewInterview() {
       <span>{resume}</span>
     </div>
             </div>
-            {/* Job position  */}
-            <div className="">
-              <label>Job Role/Job Position</label>
-              <Input
-                placeholder="Ex. Full Stack Developer"
-                required
-                onChange={(event) => setJobPosition(event.target.value)}
-              />
-            </div>
             {/* Job description  */}
             <div className="">
               <label>Job Description/Tech Stack (In Short)</label>
@@ -500,17 +538,6 @@ function AddNewInterview() {
                 placeholder="Ex. Sprint Boot, MERN, Angular"
                 required
                 onChange={(event) => setJobDesc(event.target.value)}
-              />
-            </div>
-            {/* Years of experience */}
-            <div className="">
-              <label>Years of experience</label>
-              <Input
-                placeholder="0-40"
-                type="number"
-                max="40"
-                required
-                onChange={(event) => setJobExperience(event.target.value)}
               />
             </div>
             {/* Start cancel buttons  */}
@@ -526,8 +553,7 @@ function AddNewInterview() {
                 <Button type="submit" disable={loading.toString()}>
                   {loading ? (
                     <>
-                      <LoaderCircle className="animate-spin" /> Preparing
-                      Interview
+                      <LoaderCircle className="animate-spin" /> {resumeData ? "Preparing Interview" : "Parsing Resume"}
                     </>
                   ) : (
                     "Start Interview"
