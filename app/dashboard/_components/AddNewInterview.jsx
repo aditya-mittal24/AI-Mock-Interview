@@ -43,7 +43,7 @@ import { useUser } from "@clerk/nextjs";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import axios from 'axios';
+import axios from "axios";
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
@@ -66,26 +66,30 @@ function AddNewInterview() {
       e.target.value = null; // Clear the input
       return;
     }
-    setResumeData("")
+    setResumeData("");
     uploadResume(file);
     setResume(file.name);
   };
   const uploadResume = async (file) => {
-    setLoading(true)
+    setLoading(true);
     const formData = new FormData();
-    formData.append('file', file);
-  
+    formData.append("file", file);
+
     try {
-      const response = await axios.post('http://localhost:8000/upload-resume', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      setResumeData(JSON.stringify(response.data))
+      const response = await axios.post(
+        "http://localhost:8000/upload-resume",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      setResumeData(JSON.stringify(response.data));
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const onSubmit = async (e) => {
@@ -136,6 +140,7 @@ function AddNewInterview() {
   Use the following attributes to tailor the questions:
   Interview Round: ${interviewRound}
   Interview Duration: ${duration}
+  Company: ${company}
   Candidate Resume: ${resumeData}
   Job Description: ${jobDesc}
   Make the interview engaging and as realistic as possible while staying professional.
@@ -160,26 +165,30 @@ function AddNewInterview() {
     console.log(JSON.parse(jsonResp));
     setJsonResponse(jsonResp);
 
-    // if (jsonResp) {
-    //   const resp = await db
-    //     .insert(MockInterview)
-    //     .values({
-    //       mockId: uuidv4(),
-    //       jsonMockResp: jsonResp,
-    //       jobDesc: jobDesc,
-    //       createdBy: user?.primaryEmailAddress?.emailAddress,
-    //       createdAt: moment().format("DD-MM-yyyy"),
-    //     })
-    //     .returning({ mockId: MockInterview.mockId });
+    if (jsonResp) {
+      const resp = await db
+        .insert(MockInterview)
+        .values({
+          mockId: uuidv4(),
+          jsonMockResp: jsonResp,
+          jobDesc: jobDesc,
+          interviewRound: interviewRound,
+          interviewDuration: duration,
+          company: company,
+          resumeContent: resumeContent,
+          createdBy: user?.primaryEmailAddress?.emailAddress,
+          createdAt: moment().format("DD-MM-yyyy"),
+        })
+        .returning({ mockId: MockInterview.mockId });
 
-    //   console.log("Inserted ID:", resp);
-    //   if (resp) {
-    //     setOpenDialog(false);
-    //     router.push("/interview/" + resp[0]?.mockId);
-    //   }
-    // } else {
-    //   console.log("Error");
-    // }
+      console.log("Inserted ID:", resp);
+      if (resp) {
+        setOpenDialog(false);
+        router.push("/interview/" + resp[0]?.mockId);
+      }
+    } else {
+      console.log("Error");
+    }
 
     setLoading(false);
   };
@@ -332,7 +341,7 @@ function AddNewInterview() {
                       checked={interviewRound == "HR Round"}
                       onChange={(event) => {
                         setInterviewRound(event.target.value);
-                        setDuration('20');
+                        setDuration("20");
                       }}
                     />
                   </label>
@@ -512,24 +521,24 @@ function AddNewInterview() {
             </div>
             {/* Resume */}
             <div className="flex gap-4 items-center">
-            <label htmlFor="">Upload Resume</label>
-            <div className="flex justify-center items-center gap-2">
-      <label
-        htmlFor="pdf-upload"
-        className="flex items-center space-x-2 px-4 py-2 text-blue-500 text-sm font-medium rounded-lg shadow-md hover:bg-blue-500 hover:text-white transition duration-300 cursor-pointer"
-      >
-        <Paperclip className="w-5 h-5" />
-        <span>Upload</span>
-      </label>
-      <input
-        id="pdf-upload"
-        type="file"
-        accept="application/pdf"
-        onChange={handleFileUpload}
-        className="hidden"
-      />
-      <span>{resume}</span>
-    </div>
+              <label htmlFor="">Upload Resume</label>
+              <div className="flex justify-center items-center gap-2">
+                <label
+                  htmlFor="pdf-upload"
+                  className="flex items-center space-x-2 px-4 py-2 text-blue-500 text-sm font-medium rounded-lg shadow-md hover:bg-blue-500 hover:text-white transition duration-300 cursor-pointer"
+                >
+                  <Paperclip className="w-5 h-5" />
+                  <span>Upload</span>
+                </label>
+                <input
+                  id="pdf-upload"
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                <span>{resume}</span>
+              </div>
             </div>
             {/* Job description  */}
             <div className="">
@@ -553,7 +562,8 @@ function AddNewInterview() {
                 <Button type="submit" disable={loading.toString()}>
                   {loading ? (
                     <>
-                      <LoaderCircle className="animate-spin" /> {resumeData ? "Preparing Interview" : "Parsing Resume"}
+                      <LoaderCircle className="animate-spin" />{" "}
+                      {resumeData ? "Preparing Interview" : "Parsing Resume"}
                     </>
                   ) : (
                     "Start Interview"
@@ -601,7 +611,6 @@ export default AddNewInterview;
 // Deutsche bank
 // DiDi
 // Docusign
-
 
 // to remove
 // bank of america
