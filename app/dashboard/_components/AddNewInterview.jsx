@@ -145,6 +145,7 @@ function AddNewInterview() {
   Job Description: ${jobDesc}
   Make the interview engaging and as realistic as possible while staying professional.
     `;
+    console.log(inputPrompt)
 
     // const inputPrompt =
     //   "A candidate's professional information(Job Position, Job Description, Experience) is delimited in triple backticks. Make " +
@@ -175,7 +176,7 @@ function AddNewInterview() {
           interviewRound: interviewRound,
           interviewDuration: duration,
           company: company,
-          resumeContent: resumeContent,
+          resumeContent: resumeData,
           createdBy: user?.primaryEmailAddress?.emailAddress,
           createdAt: moment().format("DD-MM-yyyy"),
         })

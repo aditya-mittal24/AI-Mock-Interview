@@ -35,15 +35,15 @@ function Interview({ params }) {
         <div className="flex flex-col my-5 gap-5">
           <div className="flex flex-col p-5 rounded-lg border gap-5">
             <h2 className="text-lg flex gap-2 items-center">
-              <strong>Job Position:</strong>
-              {interviewData.jobPosition ? (
-                interviewData.jobPosition
+              <strong>Interview Round:</strong>
+              {interviewData.interviewRound ? (
+                interviewData.interviewRound
               ) : (
                 <Skeleton className="h-4 w-[200px]" />
               )}
             </h2>
             <h2 className="text-lg flex gap-2 items-center">
-              <strong>Job Description/Tech Stack:</strong>
+              <strong>Job Description:</strong>
               {interviewData.jobDesc ? (
                 interviewData.jobDesc
               ) : (
@@ -51,9 +51,17 @@ function Interview({ params }) {
               )}
             </h2>
             <h2 className="text-lg flex gap-2 items-center">
-              <strong>Experience:</strong>
-              {interviewData.jobExperience ? (
-                interviewData.jobExperience
+              <strong>Interview Duration:</strong>
+              {interviewData.interviewDuration ? (
+                interviewData.interviewDuration
+              ) : (
+                <Skeleton className="h-4 w-[200px]" />
+              )}
+            </h2>
+            <h2 className="text-lg flex gap-2 items-center">
+              <strong>Company:</strong>
+              {interviewData.company ? (
+                interviewData.company
               ) : (
                 <Skeleton className="h-4 w-[200px]" />
               )}
