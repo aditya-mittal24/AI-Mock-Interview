@@ -47,13 +47,13 @@ import axios from "axios";
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
-  const [jobDesc, setJobDesc] = useState();
-  const [interviewRound, setInterviewRound] = useState();
+  const [jobDesc, setJobDesc] = useState("");
+  const [interviewRound, setInterviewRound] = useState("");
   const [duration, setDuration] = useState("20");
   const [company, setCompany] = useState("");
-  const [resume, setResume] = useState();
+  const [resume, setResume] = useState("");
   const [loading, setLoading] = useState(false);
-  const [resumeData, setResumeData] = useState();
+  const [resumeData, setResumeData] = useState("");
   const [jsonResponse, setJsonResponse] = useState([]);
   const { user } = useUser();
   const router = useRouter();
@@ -62,7 +62,7 @@ function AddNewInterview() {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file && file.type !== "application/pdf") {
-      toast("Please upload PDF files only.");
+      toast.error("Please upload PDF files only.");
       e.target.value = null; // Clear the input
       return;
     }
@@ -93,9 +93,25 @@ function AddNewInterview() {
   };
 
   const onSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
-    console.log();
+    if (interviewRound=="") {
+      toast.error("Please choose the Interview Round.");
+      return;
+    } else if (duration=="") {
+      toast.error("Please choose Duration of the Interview.")
+      return;
+    // } else if (company=="") {
+    //   toast.error("Please choose the Company");
+    //   return;
+    } else if (resume=="") {
+      toast.error("Please upload your resume.");
+      return;
+    } else if(jobDesc=="") {
+      toast.error("Please enter Job Description")
+      return;
+    }
+    setLoading(true);
+
 
     const inputPrompt = `
     Act as a professional interviewer conducting an interview for the role described in the job description. Generate realistic and conversational questions for the candidate based on the given attributes. Follow this structured flow:
@@ -145,7 +161,7 @@ function AddNewInterview() {
   Job Description: ${jobDesc}
   Make the interview engaging and as realistic as possible while staying professional.
     `;
-    console.log(inputPrompt)
+    console.log(inputPrompt);
 
     // const inputPrompt =
     //   "A candidate's professional information(Job Position, Job Description, Experience) is delimited in triple backticks. Make " +
@@ -580,20 +596,6 @@ function AddNewInterview() {
 }
 
 export default AddNewInterview;
-
-<div className="inline-flex rounded-lg border border-gray-100 bg-gray-100 p-1">
-  <button className="inline-block rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative">
-    Edit
-  </button>
-
-  <button className="inline-block rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative">
-    View
-  </button>
-
-  <button className="inline-block rounded-md bg-white px-4 py-2 text-sm text-blue-500 shadow-sm focus:relative">
-    Delete
-  </button>
-</div>;
 
 // appdynamics
 // arista networks
