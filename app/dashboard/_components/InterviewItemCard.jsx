@@ -13,14 +13,14 @@ function InterviewItemCard({ interview }) {
   };
   return (
     <div className="border shadow-sm rounded-lg p-3">
-      {interview.jobPosition !== undefined ? (
-        <h2 className="font-bold text-primary">{interview?.jobPosition}</h2>
+      {interview.interviewRound !== undefined ? (
+        <h2 className="font-bold text-primary">{interview?.interviewRound}</h2>
       ) : (
-        <Skeleton className="h-3 w-10" />
+        <Skeleton className="h-3 w-20" />
       )}
-      {interview.jobExperience !== undefined ?
+      {interview.interviewDuration !== undefined ?
       <h2 className="text-sm text-gray-600">
-        {interview?.jobExperience} Years of Experience
+        {interview?.interviewDuration} Minutes
       </h2> : <Skeleton className="h-2 w-40 my-2" />}
       <h2 className="text-xs text-gray-400 flex gap-2 items-center">
         Created At: {interview.createdAt!==undefined ? interview.createdAt : <Skeleton className="h-2 w-20 my-2" />}
