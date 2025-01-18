@@ -11,12 +11,30 @@ import Link from 'next/link'
 
 function Interview({ params }) {
   const { interviewId } = React.use(params);
+  const [isFullScreen, setIsFullScreen] = React.useState(false);
+  const [warningShown, setWarningShown] = React.useState(false);
   const [interviewData, setInterviewData] = React.useState({});
   const [webcamEnabled, setWebcamEnabled] = React.useState(false);
 
   React.useEffect(() => {
     GetInterviewDetails();
   }, []);
+
+  React.useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        // Handle the exit event
+        alert("User exited fullscreen.");
+      }
+    };
+  
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+  
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+  
 
   async function GetInterviewDetails() {
     const result = await db
@@ -27,6 +45,42 @@ function Interview({ params }) {
         setInterviewData(result[0]);
       });
   }
+
+  const goFullScreen = () => {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      /* Firefox */
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+      /* Chrome, Safari, Opera */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      /* IE/Edge */
+      elem.msRequestFullscreen();
+    }
+    setIsFullScreen(true);
+    setWarningShown(false);
+  };
+
+  const exitFullScreen = () => {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      /* Firefox */
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      /* Chrome, Safari, Opera */
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      /* IE/Edge */
+      document.msExitFullscreen();
+    }
+    setIsFullScreen(false);
+  };
+
+
 
   return (
     <div className="my-10 flex justify-center flex-col items-center">
@@ -113,6 +167,9 @@ function Interview({ params }) {
               <WebcamIcon className="h-72 w-full my-7 p-20 bg-secondary rounded-lg border" />
               <Button onClick={() => setWebcamEnabled(true)}>
                 Enable Webcam and Microphone
+              </Button>
+              <Button onClick={goFullScreen}>
+                Enable Full Screen Mode
               </Button>
             </div>
           )}
