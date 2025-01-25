@@ -7,7 +7,7 @@ import { Lightbulb, WebcamIcon } from "lucide-react";
 import * as React from "react";
 import Webcam from "react-webcam";
 import { Skeleton } from "@/components/ui/skeleton";
-import Link from 'next/link'
+import Link from "next/link";
 
 function Interview({ params }) {
   const { interviewId } = React.use(params);
@@ -24,17 +24,17 @@ function Interview({ params }) {
     const handleFullscreenChange = () => {
       if (!document.fullscreenElement) {
         // Handle the exit event
-        alert("User exited fullscreen.");
+        setIsFullScreen(false)
+        // alert("User exited fullscreen.");
       }
     };
-  
+
     document.addEventListener("fullscreenchange", handleFullscreenChange);
-  
+
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
   }, []);
-  
 
   async function GetInterviewDetails() {
     const result = await db
@@ -79,8 +79,6 @@ function Interview({ params }) {
     }
     setIsFullScreen(false);
   };
-
-
 
   return (
     <div className="my-10 flex justify-center flex-col items-center">
@@ -155,7 +153,7 @@ function Interview({ params }) {
             </h2>
           </div>
         </div>
-        <div className="">
+        <div className="flex flex-col gap-4 items-center">
           {webcamEnabled ? (
             <Webcam
               onUserMedia={() => setWebcamEnabled(true)}
@@ -163,25 +161,25 @@ function Interview({ params }) {
               mirrored={true}
             />
           ) : (
-            <div className="flex flex-col">
+            <div className="flex flex-col w-full">
               <WebcamIcon className="h-72 w-full my-7 p-20 bg-secondary rounded-lg border" />
               <Button onClick={() => setWebcamEnabled(true)}>
                 Enable Webcam and Microphone
               </Button>
-              <Button onClick={goFullScreen}>
-                Enable Full Screen Mode
-              </Button>
             </div>
           )}
+        <div>
+          <Button onClick={goFullScreen}>Enable Full Screen Mode</Button>
+        </div>
         </div>
       </div>
       <div className="flex justify-end items-end">
-      <Link href={'/interview/' + interviewId + '/start'}>
-        <Button 
-        // disabled={!webcamEnabled}
-        >
-        Start Interview
-        </Button>
+        <Link href={"/interview/" + interviewId + "/start"}>
+          <Button
+          disabled={!webcamEnabled || !isFullScreen}
+          >
+            Start Interview
+          </Button>
         </Link>
       </div>
     </div>
